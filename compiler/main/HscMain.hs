@@ -166,6 +166,8 @@ import qualified Data.Map as Map
 import qualified Data.Set as S
 import Data.Set (Set)
 
+import qualified Data.Text as CheckTextImport
+
 #include "HsVersions.h"
 
 
