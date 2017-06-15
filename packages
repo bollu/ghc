@@ -37,10 +37,10 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # localpath                  tag         remotepath                      upstreamurl
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ghc-tarballs                 windows     ghc-tarballs.git                -
 libffi-tarballs              -           -                               -
 utils/hsc2hs                 -           -                               -
 utils/haddock                -           -                               ssh://git@github.com/haskell/haddock.git
+libraries/prettyprinter      -           -                               https://github.com/bollu/prettyprinter.git
 libraries/array              -           -                               -
 libraries/binary             -           -                               https://github.com/kolmodin/binary.git
 libraries/bytestring         -           -                               https://github.com/haskell/bytestring.git
@@ -54,7 +54,6 @@ libraries/haskeline          -           -                               https:/
 libraries/hoopl              -           -                               -
 libraries/hpc                -           -                               -
 libraries/pretty             -           -                               https://github.com/haskell/pretty.git
-libraries/prettyprinter      -           -                               https://github.com/bollu/prettyprinter
 libraries/process            -           -                               ssh://git@github.com/haskell/process.git
 libraries/terminfo           -           -                               https://github.com/judah/terminfo.git
 libraries/text               -           -                               https://github.com/bollu/text
