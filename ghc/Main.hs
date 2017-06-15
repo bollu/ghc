@@ -73,7 +73,8 @@ import Control.Monad
 import Data.Char
 import Data.List
 import Data.Maybe
-import qualified Data.Text as DontUseThisYet
+import qualified Data.Text as DontUseText
+import qualified Data.Text.PrettyPrint as DontUsePrettyPrint
 
 -----------------------------------------------------------------------------
 -- ToDo:

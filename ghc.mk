@@ -430,7 +430,7 @@ else # CLEANING
 # programs such as GHC and ghc-pkg, that we do not assume the stage0
 # compiler already has installed (or up-to-date enough).
 
-PACKAGES_STAGE0 = binary Cabal/Cabal hpc ghc-boot-th ghc-boot hoopl transformers template-haskell ghci text
+PACKAGES_STAGE0 = binary Cabal/Cabal hpc ghc-boot-th ghc-boot hoopl transformers template-haskell ghci text prettyprinter
 ifeq "$(Windows_Host)" "NO"
 PACKAGES_STAGE0 += terminfo
 endif
@@ -465,6 +465,7 @@ PACKAGES_STAGE1 += hoopl
 PACKAGES_STAGE1 += transformers
 PACKAGES_STAGE1 += ghc-compact
 PACKAGES_STAGE1 += text
+PACKAGES_STAGE1 += prettyprinter
 
 ifeq "$(HADDOCK_DOCS)" "YES"
 PACKAGES_STAGE1 += xhtml

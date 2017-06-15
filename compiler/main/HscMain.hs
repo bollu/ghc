@@ -166,7 +166,8 @@ import qualified Data.Map as Map
 import qualified Data.Set as S
 import Data.Set (Set)
 
-import qualified Data.Text as CheckTextImport
+import qualified Data.Text as DontUseText
+import qualified Data.Text.PrettyPrint as DontUsePrettyPrint
 
 #include "HsVersions.h"
 
