@@ -26,6 +26,10 @@
 	path = libraries/pretty
 	url = ../packages/pretty.git
 	ignore = untracked
+[submodule "libraries/prettyprinter"]
+	path = libraries/prettyprinter
+	url = https://github.com/bollu/prettyprinter.git
+	ignore = untracked
 [submodule "libraries/terminfo"]
 	path = libraries/terminfo
 	url = ../packages/terminfo.git
@@ -125,6 +129,3 @@
 [submodule ".arc-linters/arcanist-external-json-linter"]
 	path = .arc-linters/arcanist-external-json-linter
 	url = ../arcanist-external-json-linter.git
-[submodule "libraries/prettyprinter"]
-	path = libraries/prettyprinter
-	url = https://github.com/bollu/prettyprinter.git
