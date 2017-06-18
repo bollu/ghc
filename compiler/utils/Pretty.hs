@@ -121,6 +121,8 @@ import Prelude hiding (error)
 import GHC.Base ( unpackCString# )
 import GHC.Ptr  ( Ptr(..) )
 
+import Data.Text.Prettyprint.Doc
+
 -- Don't import Util( assertPanic ) because it makes a loop in the module structure
 
 
@@ -201,10 +203,11 @@ But it doesn't work, for if x=empty, we would have
 
 -- ---------------------------------------------------------------------------
 -- Operator fixity
-
+{-
 infixl 6 <>
 infixl 6 <+>
 infixl 5 $$, $+$
+-}
 
 
 -- ---------------------------------------------------------------------------
@@ -213,6 +216,8 @@ infixl 5 $$, $+$
 -- | The abstract type of documents.
 -- A Doc represents a *set* of layouts. A Doc with
 -- no occurrences of Union or NoDoc represents just one layout.
+{-
+
 data Doc
   = Empty                                            -- empty
   | NilAbove Doc                                     -- text "" $$ x
@@ -222,6 +227,8 @@ data Doc
   | NoDoc                                            -- The empty set of documents
   | Beside Doc Bool Doc                              -- True <=> space between
   | Above Doc Bool Doc                               -- True <=> never overlap
+
+-}
 
 {-
 Here are the invariants:
@@ -258,31 +265,38 @@ Notice the difference between
 
 
 -- | RDoc is a "reduced GDoc", guaranteed not to have a top-level Above or Beside.
-type RDoc = Doc
+-- type RDoc = Doc
 
 -- | The TextDetails data type
 --
 -- A TextDetails represents a fragment of text that will be
 -- output at some point.
+{-
 data TextDetails = Chr  {-# UNPACK #-} !Char -- ^ A single Char fragment
                  | Str  String -- ^ A whole String fragment
                  | PStr FastString                      -- a hashed string
                  | ZStr FastZString                     -- a z-encoded string
                  | LStr {-# UNPACK #-} !LitString {-#UNPACK #-} !Int
                    -- a '\0'-terminated array of bytes
+-}
 
+{-
 instance Show Doc where
   showsPrec _ doc cont = fullRender (mode style) (lineLength style)
                                     (ribbonsPerLine style)
                                     txtPrinter cont doc
+-}
 
 
 -- ---------------------------------------------------------------------------
 -- Values and Predicates on GDocs and TextDetails
 
 -- | A document of height and width 1, containing a literal character.
+{-
 char :: Char -> Doc
 char c = textBeside_ (Chr c) 1 Empty
+-}
+
 
 -- | A document of height 1 containing a literal string.
 -- 'text' satisfies the following laws:
@@ -293,6 +307,7 @@ char c = textBeside_ (Chr c) 1 Empty
 --
 -- The side condition on the last law is necessary because @'text' \"\"@
 -- has height 1, while 'empty' has no height.
+{-
 text :: String -> Doc
 text s = case length s of {sl -> textBeside_ (Str s)  sl Empty}
 {-# NOINLINE [0] text #-}   -- Give the RULE a chance to fire
@@ -339,6 +354,7 @@ isEmpty _     = False
 -- an old version inserted tabs being 8 columns apart in the output.
 spaces :: Int -> String
 spaces !n = replicate n ' '
+-}
 
 {-
 Q: What is the reason for negative indentation (i.e. argument to indent
@@ -369,6 +385,9 @@ translating b horizontally by (k-s). Now if the i^th line of b has an
 indentation k0 < (k-s), it is translated out-of-page, causing
 `negative indentation'.
 -}
+
+-- mega comment
+{-
 
 
 semi   :: Doc -- ^ A ';' character
@@ -1048,3 +1067,4 @@ layLeft _ _                  = panic "layLeft: Unhandled case"
 -- Define error=panic, for easier comparison with libraries/pretty.
 error :: String -> a
 error = panic
+-}
