@@ -63,10 +63,10 @@ allocation in the compiler (see thomie's comments in
 https://github.com/haskell/pretty/pull/9).
 -}
 
-module Pretty (
+module Pretty  (
 
         -- * The document type
-        Doc, TextDetails(..),
+        Doc,
 
         -- * Constructing documents
 
@@ -121,7 +121,11 @@ import Prelude hiding (error)
 import GHC.Base ( unpackCString# )
 import GHC.Ptr  ( Ptr(..) )
 
+import qualified Data.Text as T
 import Data.Text.Prettyprint.Doc
+-- PI = PrettyprinterInternal
+import Data.Text.Prettyprint.Doc.Internal as PI
+
 
 -- Don't import Util( assertPanic ) because it makes a loop in the module structure
 
@@ -208,6 +212,11 @@ infixl 6 <>
 infixl 6 <+>
 infixl 5 $$, $+$
 -}
+($+$) :: Doc a -> Doc a -> Doc a
+($+$) a b = vsep [a, b]
+
+($$) :: Doc a -> Doc a -> Doc a
+($$) = ($+$)
 
 
 -- ---------------------------------------------------------------------------
@@ -297,6 +306,9 @@ char :: Char -> Doc
 char c = textBeside_ (Chr c) 1 Empty
 -}
 
+char :: Char -> Doc a
+char = pretty
+
 
 -- | A document of height 1 containing a literal string.
 -- 'text' satisfies the following laws:
@@ -307,6 +319,15 @@ char c = textBeside_ (Chr c) 1 Empty
 --
 -- The side condition on the last law is necessary because @'text' \"\"@
 -- has height 1, while 'empty' has no height.
+
+text :: String -> Doc a
+text = pretty
+
+-- DEPRECATED
+{-# DEPRECATED zeroWidthText "woo" #-}
+zeroWidthText :: String -> Doc a
+zeroWidthText s = PI.Text 0 (T.pack s)
+
 {-
 text :: String -> Doc
 text s = case length s of {sl -> textBeside_ (Str s)  sl Empty}
@@ -328,6 +349,7 @@ ptext s = case lengthLS s of {sl -> textBeside_ (LStr s sl) sl Empty}
 
 ztext :: FastZString -> Doc
 ztext s = case lengthFZS s of {sl -> textBeside_ (ZStr s) sl Empty}
+
 
 -- | Some text with any width. (@text s = sizedText (length s) s@)
 sizedText :: Int -> String -> Doc
