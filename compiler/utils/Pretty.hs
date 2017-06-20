@@ -328,6 +328,16 @@ text = pretty
 zeroWidthText :: String -> Doc a
 zeroWidthText s = PI.Text 0 (T.pack s)
 
+
+ftext :: FastString -> Doc a
+ftext = pretty . unpackFS
+
+ptext :: LitString -> Doc a
+ptext = pretty . unpackLitString 
+
+ztext :: FastZString -> Doc a
+ztext = pretty . zString
+
 {-
 text :: String -> Doc
 text s = case length s of {sl -> textBeside_ (Str s)  sl Empty}
