@@ -128,7 +128,7 @@ import Data.Text.Prettyprint.Doc
 -- PI = PrettyprinterInternal
 import Data.Text.Prettyprint.Doc.Internal as PI
 
-import Data.Text.Prettyprint.Doc.Render.Text 
+import Data.Text.Prettyprint.Doc.Render.Text
 
 import  GHC.Float (float2Double)
 
