@@ -103,11 +103,11 @@ module Pretty  (
         Mode(..),
 
         -- ** General rendering
-        fullRender,
+        -- fullRender,
 
         -- ** GHC-specific rendering
         printDoc, printDoc_,
-        bufLeftRender -- performance hack
+        -- bufLeftRender -- performance hack
 
   ) where
 
@@ -122,9 +122,15 @@ import GHC.Base ( unpackCString# )
 import GHC.Ptr  ( Ptr(..) )
 
 import qualified Data.Text as T
+import qualified Data.Text.Lazy as TL
+
 import Data.Text.Prettyprint.Doc
 -- PI = PrettyprinterInternal
 import Data.Text.Prettyprint.Doc.Internal as PI
+
+import Data.Text.Prettyprint.Doc.Render.Text 
+
+import  GHC.Float (float2Double)
 
 
 -- Don't import Util( assertPanic ) because it makes a loop in the module structure
@@ -969,6 +975,8 @@ oneLiner (Beside {})         = error "oneLiner Beside"
 
 -- ---------------------------------------------------------------------------
 -- Rendering
+-}
+
 
 -- | A rendering style.
 data Style
@@ -987,11 +995,49 @@ data Mode = PageMode     -- ^ Normal
           | LeftMode     -- ^ No indentation, infinitely long lines
           | OneLineMode  -- ^ All on one line
 
--- | Render the @Doc@ to a String using the given @Style@.
-renderStyle :: Style -> Doc -> String
-renderStyle s = fullRender (mode s) (lineLength s) (ribbonsPerLine s)
-                txtPrinter ""
+-- currently ignoring Mode. Need to respect this later on
+styleToLayoutOptions :: Style -> LayoutOptions
+styleToLayoutOptions s = case (mode s) of
+                          LeftMode -> LayoutOptions Unbounded
+                          _ -> LayoutOptions (AvailablePerLine (lineLength s) (float2Double (ribbonsPerLine s)))
 
+-- | Render the @Doc@ to a String using the given @Style@.
+renderStyle :: Style -> Doc a -> String
+renderStyle s d = TL.unpack $ renderLazy (layoutPretty (styleToLayoutOptions s) d)
+
+printDoc :: Mode -> Int -> Handle -> Doc a -> IO ()
+-- printDoc adds a newline to the end
+printDoc mode cols hdl doc = printDoc_ mode cols hdl (doc <> hardline)
+
+printDoc_ :: Mode -> Int -> Handle -> Doc a -> IO ()
+printDoc_ mode pprCols hdl doc = renderIO hdl (layoutPretty (mkLayoutOptions mode pprCols) doc) where
+  mkLayoutOptions :: Mode -> Int -> LayoutOptions
+  -- Note that this should technically be 1.5 as per the old implementation.
+  -- I have no idea why that is.
+  mkLayoutOptions PageMode pprCols = LayoutOptions (AvailablePerLine pprCols 1.0)
+  mkLayoutOptions LeftMode pprCols = LayoutOptions Unbounded
+
+-- printDoc_ does not add a newline at the end, so that
+-- successive calls can output stuff on the same line
+-- Rather like putStr vs putStrLn
+-- printDoc_ LeftMode _ hdl doc
+--   = do { printLeftRender hdl doc; hFlush hdl }
+-- printDoc_ mode pprCols hdl doc
+--   = do { fullRender mode pprCols 1.5 put done doc ;
+--          hFlush hdl }
+--   where
+--     put (Chr c)  next = hPutChar hdl c >> next
+--     put (Str s)  next = hPutStr  hdl s >> next
+--     put (PStr s) next = hPutStr  hdl (unpackFS s) >> next
+--                         -- NB. not hPutFS, we want this to go through
+--                         -- the I/O library's encoding layer. (#3398)
+--     put (ZStr s) next = hPutFZS  hdl s >> next
+--     put (LStr s l) next = hPutLitString hdl s l >> next
+
+--     done = return () -- hPutChar hdl '\n'
+
+
+{-
 -- | Default TextDetails printer
 txtPrinter :: TextDetails -> String -> String
 txtPrinter (Chr c)   s  = c:s
@@ -1023,7 +1069,6 @@ fullRender m lineLen ribbons txt rest doc
     bestLineLen = case m of
                       ZigZagMode -> maxBound
                       _          -> lineLen
-
 easyDisplay :: TextDetails
              -> (Doc -> Doc -> Doc)
              -> (TextDetails -> a -> a)
