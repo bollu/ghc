@@ -1017,6 +1017,7 @@ printDoc_ mode pprCols hdl doc = renderIO hdl (layoutPretty (mkLayoutOptions mod
   mkLayoutOptions PageMode pprCols = LayoutOptions (AvailablePerLine pprCols 1.0)
   mkLayoutOptions LeftMode pprCols = LayoutOptions Unbounded
 
+
 -- printDoc_ does not add a newline at the end, so that
 -- successive calls can output stuff on the same line
 -- Rather like putStr vs putStrLn
